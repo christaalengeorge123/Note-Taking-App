@@ -2,7 +2,9 @@ export default class Dataservice {
   hmap = new Map();
 
   addItem(note) {
-    console.log("blaaa " + note.id);
+    if (this.hmap.has(note.id)) {
+      console.log("alredy existing");
+    }
     this.hmap.set(note.id, note);
     console.log("her e- " + this.hmap);
   }
@@ -17,6 +19,11 @@ export default class Dataservice {
   deleteItem(id) {
     if (this.hmap.has(id)) {
       this.hmap.delete(id);
+    }
+  }
+  displayNoteContent(id) {
+    if (this.hmap.has(id)) {
+      return this.hmap.get(id);
     }
   }
   createUid() {

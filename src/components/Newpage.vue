@@ -2,19 +2,23 @@
   <div class="newpage">
     <div class="title">
       <!-- <b-form-group id="input-group-2" label="Title:" label-for="input-2">-->
-      <b-form-input id="input-2" v-model="title" required placeholder="Enter Title"></b-form-input>
+      <b-form-input id="input-2" v-model="note.title" required placeholder="Enter Title"></b-form-input>
       <!-- </b-form-group>-->
     </div>
     <div class="content">
       <b-form-textarea
         id="textarea"
-        v-model="text"
-        :placeholder="'Enter content of ' + [[ title ]]"
+        v-model="note.content"
+        :placeholder="'Enter content of ' + [[note.title ]]"
         rows="10"
       ></b-form-textarea>
     </div>
     <div class="addbutton">
-      <b-button variant="primary" style="margin-right: 30px">Delete Page</b-button>
+      <b-button
+        variant="primary"
+        style="margin-right: 30px"
+        v-on:click="deleteitem(note.id)"
+      >Delete Page</b-button>
 
       <b-button variant="primary" v-on:click="saveitem()">Save page</b-button>
     </div>
@@ -22,20 +26,20 @@
 </template>
 
 <script>
-import Note from "../models/Note.js";
+//import Note from "../models/Note.js";
 export default {
+  props: ["note"],
   data() {
-    return {
-      text: "",
-      title: ""
-    };
+    return {};
   },
   methods: {
     saveitem: function() {
-      var note = new Note(this.$dataService.createUid(), this.title, this.text);
-
-      this.$dataService.addItem(note);
+      this.$dataService.addItem(this.note);
       console.log(this.$dataService.getnotelist());
+      this.$emit("show-page");
+    },
+    deleteitem: function(id) {
+      this.$dataService.deleteItem(id);
       this.$emit("show-page");
     }
   }
@@ -44,10 +48,10 @@ export default {
 
 <style scoped>
 .content {
-  margin: 100px 50px 75px 200px;
+  margin: 100px 50px 75px 250px;
 }
 .title {
-  margin: 100px 50px 75px 200px;
+  margin: 100px 50px 75px 250px;
 }
 #input-group-2.label {
   margin-left: 175px;

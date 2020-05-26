@@ -6,16 +6,16 @@
     <div class="page-info">
       <div class="display-titles">
         <li v-for="item in items" :key="item.title">
-          <b-button variant="titles">{{ item.title }}</b-button>
+          <b-button variant="titles" @click="displayContent(item.id)">{{ item.title }}</b-button>
         </li>
       </div>
       <div class="newpagebutton">
-        <b-button variant="primary" @click="swapComponent()">New page</b-button>
+        <b-button variant="primary" @click="createNotes()">New page</b-button>
       </div>
     </div>
 
     <div v-if="showpage==true">
-      <v-newpage v-on:show-page="reloadItems(), showpage = false"></v-newpage>
+      <v-newpage v-on:show-page="reloadItems(), showpage = false" v-bind:note="note"></v-newpage>
     </div>
   </div>
 </template>
@@ -23,12 +23,13 @@
 <script>
 import Header from "./Header.vue";
 import Newpage from "./Newpage.vue";
-// import Note from "../models/Note.js";
+import Note from "../models/Note.js";
 export default {
   data() {
     return {
       showpage: Boolean,
-      items: []
+      items: [],
+      note: Note
     };
   },
   components: {
@@ -39,12 +40,19 @@ export default {
   },
   methods: {
     // TODO: Create methods that will be sent into Button component
-    swapComponent: function() {
+    createNotes: function() {
       this.showpage = true;
+      this.note = new Note(this.$dataService.createUid(), "", "");
+      // this.$dataService.addItem(this.note);
     },
     reloadItems: function() {
       this.items = this.$dataService.getnotelist();
       console.log(this.items);
+    },
+    displayContent: function(id) {
+      this.note = this.$dataService.displayNoteContent(id);
+      console.log("note is" + this.note.title);
+      this.showpage = true;
     }
   },
   beforeMount() {
@@ -54,7 +62,7 @@ export default {
 </script>
 <style scoped>
 .page-info {
-  width: 175px;
+  width: 230px;
   background: #f0ffff;
   position: absolute;
   left: 0;
@@ -74,5 +82,8 @@ export default {
 .btn-titles {
   background-color: lightskyblue !important;
   border: none;
+}
+li:not(:last-child) {
+  margin-bottom: 5px;
 }
 </style>
