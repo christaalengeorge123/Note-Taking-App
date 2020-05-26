@@ -66,7 +66,7 @@ export default {
   border: none;
 }
 .newpagebutton {
-  margin-top: 800px;
+  margin-top: 100px;
 }
 .display-titles {
   padding-top: 50px;
