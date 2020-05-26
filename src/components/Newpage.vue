@@ -16,18 +16,28 @@
     <div class="addbutton">
       <b-button variant="primary" style="margin-right: 30px">Delete Page</b-button>
 
-      <b-button variant="primary" v-on:click="$emit('show-page')">Save page</b-button>
+      <b-button variant="primary" v-on:click="saveitem()">Save page</b-button>
     </div>
   </div>
 </template>
 
 <script>
+import Note from "../models/Note.js";
 export default {
   data() {
     return {
       text: "",
       title: ""
     };
+  },
+  methods: {
+    saveitem: function() {
+      var note = new Note(this.$dataService.createUid(), this.title, this.text);
+
+      this.$dataService.addItem(note);
+      console.log(this.$dataService.getnotelist());
+      this.$emit("show-page");
+    }
   }
 };
 </script>

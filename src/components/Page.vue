@@ -4,13 +4,18 @@
       <v-header></v-header>
     </div>
     <div class="page-info">
+      <div class="display-titles">
+        <li v-for="item in items" :key="item.title">
+          <b-button variant="titles">{{ item.title }}</b-button>
+        </li>
+      </div>
       <div class="newpagebutton">
         <b-button variant="primary" @click="swapComponent()">New page</b-button>
       </div>
     </div>
 
     <div v-if="showpage==true">
-      <v-newpage v-on:show-page="showpage = false"></v-newpage>
+      <v-newpage v-on:show-page="reloadItems(), showpage = false"></v-newpage>
     </div>
   </div>
 </template>
@@ -18,11 +23,12 @@
 <script>
 import Header from "./Header.vue";
 import Newpage from "./Newpage.vue";
-import Note from "../models/Note.js";
+// import Note from "../models/Note.js";
 export default {
   data() {
     return {
-      showpage: Boolean
+      showpage: Boolean,
+      items: []
     };
   },
   components: {
@@ -35,10 +41,14 @@ export default {
     // TODO: Create methods that will be sent into Button component
     swapComponent: function() {
       this.showpage = true;
-      const note = new Note(1, "first", "errere");
-      console.log(note.title);
-      console.log(this.showpage);
+    },
+    reloadItems: function() {
+      this.items = this.$dataService.getnotelist();
+      console.log(this.items);
     }
+  },
+  beforeMount() {
+    this.reloadItems();
   }
 };
 </script>
@@ -57,5 +67,12 @@ export default {
 }
 .newpagebutton {
   margin-top: 800px;
+}
+.display-titles {
+  padding-top: 50px;
+}
+.btn-titles {
+  background-color: lightskyblue !important;
+  border: none;
 }
 </style>

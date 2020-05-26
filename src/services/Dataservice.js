@@ -1,13 +1,20 @@
-class Dataservice {
+export default class Dataservice {
   hmap = new Map();
 
-  addintomap(note) {
-    this.hmap[note.id] = note;
+  addItem(note) {
+    console.log("blaaa " + note.id);
+    this.hmap.set(note.id, note);
+    console.log("her e- " + this.hmap);
   }
   getnotelist() {
-    return this.hmap.values();
+    let notelist = [];
+    for (let value of this.hmap.values()) {
+      notelist.push(value);
+    }
+
+    return notelist;
   }
-  deletefromhmap(id) {
+  deleteItem(id) {
     if (this.hmap.has(id)) {
       this.hmap.delete(id);
     }
