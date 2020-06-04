@@ -6,7 +6,9 @@
     <div class="page-info">
       <div class="display-titles">
         <li v-for="item in items" :key="item.title">
-          <b-button variant="titles" @click="displayContent(item.id)">{{ item.title }}</b-button>
+          <b-button variant="titles" @click="displayContent(item.id)">{{
+            item.title
+          }}</b-button>
         </li>
       </div>
       <div class="newpagebutton">
@@ -14,8 +16,11 @@
       </div>
     </div>
 
-    <div v-if="showpage==true">
-      <v-newpage v-on:show-page="reloadItems(), showpage = false" v-bind:note="note"></v-newpage>
+    <div v-if="showpage == true">
+      <v-newpage
+        v-on:show-page="reloadItems(), (showpage = false)"
+        v-bind:note="note"
+      ></v-newpage>
     </div>
   </div>
 </template>
@@ -29,12 +34,12 @@ export default {
     return {
       showpage: Boolean,
       items: [],
-      note: Note
+      note: Note,
     };
   },
   components: {
     "v-header": Header,
-    "v-newpage": Newpage
+    "v-newpage": Newpage,
 
     // TODO: Register Button component locally
   },
@@ -46,18 +51,24 @@ export default {
       // this.$dataService.addItem(this.note);
     },
     reloadItems: function() {
-      this.items = this.$dataService.getnotelist();
-      console.log(this.items);
+      this.$dataService.getnotelist().then((result) => {
+        // successMessage is whatever we passed in the resolve(...) function above.
+        // It doesn't have to be a string, but if it is only a succeed message, it probably will be.
+        this.items = result;
+      });
     },
     displayContent: function(id) {
-      this.note = this.$dataService.displayNoteContent(id);
-      console.log("note is" + this.note.title);
-      this.showpage = true;
-    }
+      this.$dataService.displayNoteContent(id).then((result) => {
+        var note = new Note(result.id, result.title, result.content);
+        this.note = note;
+        this.showpage = true;
+      });
+    },
   },
+
   beforeMount() {
     this.reloadItems();
-  }
+  },
 };
 </script>
 <style scoped>

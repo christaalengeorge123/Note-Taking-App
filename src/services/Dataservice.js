@@ -1,5 +1,10 @@
+import axios from "axios";
+import Note from "../models/Note.js";
+
 export default class Dataservice {
   hmap = new Map();
+  http = axios;
+  baseURI = "http://localhost:5000/";
 
   addItem(note) {
     if (this.hmap.has(note.id)) {
@@ -8,23 +13,57 @@ export default class Dataservice {
     this.hmap.set(note.id, note);
     console.log("her e- " + this.hmap);
   }
-  getnotelist() {
-    let notelist = [];
-    for (let value of this.hmap.values()) {
-      notelist.push(value);
-    }
 
-    return notelist;
+  getnotelist() {
+    let mypromise = new Promise((resolve, reject) => {
+      try {
+        console.log("blaaaaaaa");
+        const uri = this.baseURI + "api/notes";
+        this.http.get(uri).then((result) => {
+          console.log(result.data);
+
+          resolve(result.data);
+        });
+      } catch (err) {
+        reject("Error in calling API" + err);
+      }
+    });
+    return mypromise;
   }
+
   deleteItem(id) {
-    if (this.hmap.has(id)) {
-      this.hmap.delete(id);
-    }
+    // const uri = this.baseURI + "api/notes/" + id;
+    let mypromise = new Promise((resolve, reject) => {
+      try {
+        const uri = this.baseURI + "api/notes/" + id;
+        this.http.delete(uri).then((result) => {
+          resolve(result);
+        });
+      } catch (err) {
+        reject("Error in calling API" + err);
+      }
+    });
+    return mypromise;
   }
   displayNoteContent(id) {
-    if (this.hmap.has(id)) {
-      return this.hmap.get(id);
-    }
+    let mypromise1 = new Promise((resolve, reject) => {
+      try {
+        console.log("blaaaaaaa1");
+        const uri = this.baseURI + "api/notes/" + id;
+        this.http.get(uri).then((result) => {
+          console.log(result.data);
+          var note = new Note(
+            result.data.id,
+            result.data.title,
+            result.data.content
+          );
+          resolve(note);
+        });
+      } catch (err) {
+        reject("Error in calling API" + err);
+      }
+    });
+    return mypromise1;
   }
   createUid() {
     // Math.random should be unique because of its seeding algorithm.

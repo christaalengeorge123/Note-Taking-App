@@ -2,14 +2,19 @@
   <div class="newpage">
     <div class="title">
       <!-- <b-form-group id="input-group-2" label="Title:" label-for="input-2">-->
-      <b-form-input id="input-2" v-model="note.title" required placeholder="Enter Title"></b-form-input>
+      <b-form-input
+        id="input-2"
+        v-model="note.title"
+        required
+        placeholder="Enter Title"
+      ></b-form-input>
       <!-- </b-form-group>-->
     </div>
     <div class="content">
       <b-form-textarea
         id="textarea"
         v-model="note.content"
-        :placeholder="'Enter content of ' + [[note.title ]]"
+        :placeholder="'Enter content of ' + [[note.title]]"
         rows="10"
       ></b-form-textarea>
     </div>
@@ -18,7 +23,8 @@
         variant="primary"
         style="margin-right: 30px"
         v-on:click="deleteitem(note.id)"
-      >Delete Page</b-button>
+        >Delete Page</b-button
+      >
 
       <b-button variant="primary" v-on:click="saveitem()">Save page</b-button>
     </div>
@@ -39,10 +45,12 @@ export default {
       this.$emit("show-page");
     },
     deleteitem: function(id) {
-      this.$dataService.deleteItem(id);
-      this.$emit("show-page");
-    }
-  }
+      this.$dataService.deleteItem(id).then((result) => {
+        console.log(result);
+        this.$emit("show-page");
+      });
+    },
+  },
 };
 </script>
 
