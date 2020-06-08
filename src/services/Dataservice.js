@@ -7,17 +7,40 @@ export default class Dataservice {
   baseURI = "http://localhost:5000/";
 
   addItem(note) {
-    if (this.hmap.has(note.id)) {
-      console.log("alredy existing");
-    }
-    this.hmap.set(note.id, note);
-    console.log("her e- " + this.hmap);
+    let mypromise = new Promise((resolve, reject) => {
+      try {
+        const uri = this.baseURI + "api/notes";
+        this.http
+          .post(uri, { Title: note.title, Content: note.content })
+          .then((result) => {
+            resolve(result);
+          });
+      } catch (err) {
+        reject("Error in calling API" + err);
+      }
+    });
+    return mypromise;
+  }
+  updateItem(note) {
+    let mypromise = new Promise((resolve, reject) => {
+      try {
+        console.log(note.id);
+        const uri = this.baseURI + "api/notes/" + note.id;
+        this.http
+          .put(uri, { Id: note.id, Title: note.title, Content: note.content })
+          .then((result) => {
+            resolve(result);
+          });
+      } catch (err) {
+        reject("Error in calling API" + err);
+      }
+    });
+    return mypromise;
   }
 
   getnotelist() {
     let mypromise = new Promise((resolve, reject) => {
       try {
-        console.log("blaaaaaaa");
         const uri = this.baseURI + "api/notes";
         this.http.get(uri).then((result) => {
           console.log(result.data);
@@ -48,7 +71,6 @@ export default class Dataservice {
   displayNoteContent(id) {
     let mypromise1 = new Promise((resolve, reject) => {
       try {
-        console.log("blaaaaaaa1");
         const uri = this.baseURI + "api/notes/" + id;
         this.http.get(uri).then((result) => {
           console.log(result.data);
@@ -64,16 +86,5 @@ export default class Dataservice {
       }
     });
     return mypromise1;
-  }
-  createUid() {
-    // Math.random should be unique because of its seeding algorithm.
-    // Convert it to base 36 (numbers + letters), and grab the first 9 characters
-    // after the decimal.
-    return (
-      "_" +
-      Math.random()
-        .toString(36)
-        .substr(2, 9)
-    );
   }
 }

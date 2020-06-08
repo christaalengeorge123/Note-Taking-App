@@ -20,6 +20,7 @@
       <v-newpage
         v-on:show-page="reloadItems(), (showpage = false)"
         v-bind:note="note"
+        v-bind:isNewNote="isNewNote"
       ></v-newpage>
     </div>
   </div>
@@ -35,6 +36,7 @@ export default {
       showpage: Boolean,
       items: [],
       note: Note,
+      isNewNote: Boolean,
     };
   },
   components: {
@@ -46,9 +48,10 @@ export default {
   methods: {
     // TODO: Create methods that will be sent into Button component
     createNotes: function() {
+      this.isNewNote = true;
       this.showpage = true;
-      this.note = new Note(this.$dataService.createUid(), "", "");
-      // this.$dataService.addItem(this.note);
+      console.log(this.isNewNote);
+      this.note = new Note("", "", "");
     },
     reloadItems: function() {
       this.$dataService.getnotelist().then((result) => {
@@ -62,6 +65,8 @@ export default {
         var note = new Note(result.id, result.title, result.content);
         this.note = note;
         this.showpage = true;
+        this.isNewNote = false;
+        console.log(this.isNewNote);
       });
     },
   },

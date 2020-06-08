@@ -18,33 +18,47 @@
         rows="10"
       ></b-form-textarea>
     </div>
-    <div class="addbutton">
-      <b-button
-        variant="primary"
-        style="margin-right: 30px"
-        v-on:click="deleteitem(note.id)"
-        >Delete Page</b-button
-      >
+    <div class="container">
+      <div class="left">
+        <b-button variant="primary" v-on:click="deleteitem(note.id)"
+          >Delete Page</b-button
+        >
+      </div>
+      <div class="center" v-if="isNewNote == true">
+        <b-button variant="primary" v-on:click="saveitem()">Save page</b-button>
+      </div>
 
-      <b-button variant="primary" v-on:click="saveitem()">Save page</b-button>
+      <div class="right" v-else>
+        <b-button variant="primary" v-on:click="updateitem()"
+          >Update page</b-button
+        >
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-//import Note from "../models/Note.js";
+import Note from "../models/Note.js";
 export default {
-  props: ["note"],
+  props: { note: Note, isNewNote: Boolean },
   data() {
     return {};
   },
   methods: {
     saveitem: function() {
-      this.$dataService.addItem(this.note);
-      console.log(this.$dataService.getnotelist());
-      this.$emit("show-page");
+      this.$dataService.addItem(this.note).then((result) => {
+        console.log(result);
+        this.$emit("show-page");
+      });
+    },
+    updateitem: function() {
+      this.$dataService.updateItem(this.note).then((result) => {
+        console.log(result);
+        this.$emit("show-page");
+      });
     },
     deleteitem: function(id) {
+      console.log(this.showbutton);
       this.$dataService.deleteItem(id).then((result) => {
         console.log(result);
         this.$emit("show-page");
@@ -68,8 +82,27 @@ export default {
 .addbutton {
   margin-left: 175px;
 }
+
 .btn-primary {
   background-color: #17a2b8 !important;
   border: none;
+}
+.container {
+  width: 100%;
+  text-align: center;
+}
+
+.left {
+  float: left;
+}
+
+.center {
+  display: inline-block;
+  margin: 0 auto;
+}
+
+.right {
+  display: inline-block;
+  margin: 0 auto;
 }
 </style>
