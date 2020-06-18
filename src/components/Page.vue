@@ -14,6 +14,39 @@
       <div class="newpagebutton">
         <b-button variant="primary" @click="createNotes()">New page</b-button>
       </div>
+      <div class="mapbutton">
+        <b-button variant="primary" @click="redirectToMaps()"
+          >View map</b-button
+        >
+      </div>
+      <div class="addroutes">
+        <b-button variant="primary" @click="addcoordinates()"
+          >Add Routes</b-button
+        >
+      </div>
+      <div class="addcoordinates" v-if="isNewcoordinate == true">
+        <div class="latitude">
+          <b-form-input
+            id="input-2"
+            v-model="location.latitude"
+            required
+            placeholder="Latitude"
+          ></b-form-input>
+        </div>
+        <div class="longitude">
+          <b-form-input
+            id="input-2"
+            v-model="location.longitude"
+            required
+            placeholder="Longitude"
+          ></b-form-input>
+        </div>
+        <div class="insertroutes">
+          <b-button variant="primary" @click="insertcoordinates()"
+            >Add</b-button
+          >
+        </div>
+      </div>
     </div>
 
     <div v-if="showpage == true">
@@ -23,6 +56,9 @@
         v-bind:isNewNote="isNewNote"
       ></v-newpage>
     </div>
+    <div v-if="showmap == true">
+      <v-map v-bind:location="location"></v-map>
+    </div>
   </div>
 </template>
 
@@ -30,18 +66,25 @@
 import Header from "./Header.vue";
 import Newpage from "./Newpage.vue";
 import Note from "../models/Note.js";
+import EsriMap from "./EsriMap.vue";
+import Location from "../models/Location.js";
 export default {
   data() {
     return {
       showpage: Boolean,
       items: [],
       note: Note,
+      location: Location,
       isNewNote: Boolean,
+      showmap: Boolean,
+      isNewcoordinate: false,
+      //mapdata: {},
     };
   },
   components: {
     "v-header": Header,
     "v-newpage": Newpage,
+    "v-map": EsriMap,
 
     // TODO: Register Button component locally
   },
@@ -50,15 +93,33 @@ export default {
     createNotes: function() {
       this.isNewNote = true;
       this.showpage = true;
+      this.showmap = false;
       console.log(this.isNewNote);
       this.note = new Note("", "", "");
     },
+    redirectToMaps: function() {
+      this.showmap = true;
+      this.showpage = false;
+    },
+
     reloadItems: function() {
       this.$dataService.getnotelist().then((result) => {
         // successMessage is whatever we passed in the resolve(...) function above.
         // It doesn't have to be a string, but if it is only a succeed message, it probably will be.
         this.items = result;
       });
+    },
+    addcoordinates: function() {
+      this.isNewcoordinate = !this.isNewcoordinate;
+    },
+    insertcoordinates: function() {
+      //console.log("latitude" + this.location.latitude);
+      //console.log("longitude" + this.location.longitude);
+      this.isNewcoordinate = !this.isNewcoordinate;
+      this.location = new Location(
+        this.location.latitude,
+        this.location.longitude
+      );
     },
     displayContent: function(id) {
       this.$dataService.displayNoteContent(id).then((result) => {
@@ -91,6 +152,22 @@ export default {
 }
 .newpagebutton {
   margin-top: 100px;
+}
+.mapbutton {
+  margin-top: 25px;
+}
+.addroutes {
+  margin-top: 30px;
+}
+.addcoordinates {
+  margin-top: 32px;
+  height: 200px;
+}
+.insertroutes {
+  margin-top: 36px;
+}
+.longitude {
+  margin-top: 34px;
 }
 .display-titles {
   padding-top: 50px;

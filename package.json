@@ -9,9 +9,13 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
+    "azure-maps-control": "^2.0.25",
+    "azure-maps-rest": "^2.0.5",
     "bootstrap": "^4.5.0",
     "bootstrap-vue": "^2.14.0",
     "core-js": "^3.6.4",
+    "esri": "0.0.1-security",
+    "esri-loader": "^2.14.0",
     "vue": "^2.6.11"
   },
   "devDependencies": {

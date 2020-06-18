@@ -6,12 +6,14 @@
 
 <script>
 import Page from "./components/Page.vue";
+//import WebMap from "./components/WebMap.vue";
 
 export default {
   name: "App",
   components: {
-    Page
-  }
+    Page,
+    // WebMap,
+  },
 };
 </script>
 
