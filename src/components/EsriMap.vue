@@ -77,6 +77,11 @@ export default {
         longitude: -122.09116,
         latitude: 47.67438,
       };
+      var point3 = {
+        type: "point",
+        longitude: -122.09948,
+        latitude: 47.671501,
+      };
 
       var simpleMarkerSymbol = {
         type: "picture-marker", // autocasts as new PictureMarkerSymbol()
@@ -84,11 +89,18 @@ export default {
         width: "25px",
         height: "25px",
       };
+      var busMarkerSymbol = {
+        type: "picture-marker", // autocasts as new PictureMarkerSymbol()
+        url: "./school2.jpg",
+        width: "25px",
+        height: "25px",
+      };
+
       //*** ADD ***//
       // Create attributes
       var attributes = {
-        Name: "My point", // The name of the
-        Location: " Point Dume State Beach", // The owner of the
+        Name: "My point1", // The name of the
+        Location: " Redmond transit centre", // The owner of the
       };
       // Create popup template
       var popupTemplate = {
@@ -96,20 +108,39 @@ export default {
         content: "I am located at <b>{Location}</b>.",
       };
 
+      var attributes2 = {
+        Name2: "My point2", // The name of the
+        Location2: " Near Costco", // The owner of the
+      };
+      // Create popup template
+      var popupTemplate2 = {
+        title: "{Name2}",
+        content: "I am located at <b>{Location2}</b>.",
+      };
       var pointGraphic = new Graphic({
         geometry: point,
-        symbol: simpleMarkerSymbol,
+
         attributes: attributes,
         popupTemplate: popupTemplate,
-      });
-      var pointGraphic2 = new Graphic({
-        geometry: point2,
-
         symbol: simpleMarkerSymbol,
       });
 
+      var pointGraphic2 = new Graphic({
+        geometry: point2,
+        attributes: attributes2,
+        popupTemplate: popupTemplate2,
+        symbol: simpleMarkerSymbol,
+      });
+
+      var pointGraphic3 = new Graphic({
+        geometry: point3,
+        attributes: attributes2,
+        popupTemplate: popupTemplate2,
+        symbol: busMarkerSymbol,
+      });
       this.graphicsLayer.add(pointGraphic);
       this.graphicsLayer.add(pointGraphic2);
+      this.graphicsLayer.add(pointGraphic3);
 
       this.basemapGallery = new BasemapGallery({
         view: this.view,
