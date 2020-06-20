@@ -16,6 +16,7 @@
     "core-js": "^3.6.4",
     "esri": "0.0.1-security",
     "esri-loader": "^2.14.0",
+    "gridjs-vue": "^0.2.4",
     "vue": "^2.6.11"
   },
   "devDependencies": {

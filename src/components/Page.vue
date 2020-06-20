@@ -41,6 +41,34 @@
             placeholder="Longitude"
           ></b-form-input>
         </div>
+        <div class="radio-type">
+          <input type="radio" v-model="locationtype" value="busstop" />Bus Stop
+          <input type="radio" v-model="locationtype" value="school" />School
+        </div>
+        <div class="orderNo">
+          <b-form-input
+            id="input-2"
+            v-model="location.order"
+            required
+            placeholder="Order Number"
+          ></b-form-input>
+        </div>
+        <div class="title">
+          <b-form-input
+            id="input-2"
+            v-model="location.title"
+            required
+            placeholder="Title"
+          ></b-form-input>
+        </div>
+        <div class="content">
+          <b-form-input
+            id="input-2"
+            v-model="location.content"
+            required
+            placeholder="Content"
+          ></b-form-input>
+        </div>
         <div class="insertroutes">
           <b-button variant="primary" @click="insertcoordinates()"
             >Add</b-button
@@ -68,6 +96,7 @@ import Newpage from "./Newpage.vue";
 import Note from "../models/Note.js";
 import EsriMap from "./EsriMap.vue";
 import Location from "../models/Location.js";
+import LocationType from "../models/LocationType";
 export default {
   data() {
     return {
@@ -78,6 +107,7 @@ export default {
       isNewNote: Boolean,
       showmap: Boolean,
       isNewcoordinate: false,
+      locationtype: LocationType,
       //mapdata: {},
     };
   },
@@ -85,8 +115,6 @@ export default {
     "v-header": Header,
     "v-newpage": Newpage,
     "v-map": EsriMap,
-
-    // TODO: Register Button component locally
   },
   methods: {
     // TODO: Create methods that will be sent into Button component
@@ -118,8 +146,13 @@ export default {
       this.isNewcoordinate = !this.isNewcoordinate;
       this.location = new Location(
         this.location.latitude,
-        this.location.longitude
+        this.location.longitude,
+        this.locationtype,
+        this.location.order,
+        this.location.title,
+        this.location.content
       );
+      console.log(this.location);
     },
     displayContent: function(id) {
       this.$dataService.displayNoteContent(id).then((result) => {
@@ -162,6 +195,18 @@ export default {
 .addcoordinates {
   margin-top: 32px;
   height: 200px;
+}
+.radio-type {
+  margin-top: 35px;
+}
+.orderNo {
+  margin-top: 36px;
+}
+.title {
+  margin-top: 37px;
+}
+.content{
+  margin-top: 38px;
 }
 .insertroutes {
   margin-top: 36px;
