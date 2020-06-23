@@ -5,12 +5,17 @@
       <b-button variant="primary" @click="loadgallery()">Map Gallery</b-button>
     </div>
     <div class="routesdetails">
-      <b-button variant="primary" @click="loaddetails()"
-        >Routes Details</b-button
-      >
+      <b-button variant="primary" @click="loaddetails()">Routes Details</b-button>
     </div>
     <div class="stopdetails" v-if="showtable == true">
-      <b-table striped hover :items="locationlist" :fields="fields"></b-table>
+      <b-table
+        striped
+        hover
+        :items="locationlist"
+        :fields="fields"
+        :sort-by.sync="sortBy"
+        :sort-desc.sync="sortDesc"
+      ></b-table>
     </div>
   </div>
 </template>
@@ -26,32 +31,32 @@ import LocationType from "../models/LocationType.js";
 export default {
   props: { location: Location },
   watch: {
-    location: function(newVal, oldVal) {
+    location: function(newVal) {
       // watch it
-      console.log("Prop changed: ", newVal, " | was: ", oldVal);
-      this.addLocation(newVal);
-    },
+      //console.log("Prop changed: ", newVal, " | was: ", oldVal);
+      this.locationobject = new Location(
+        newVal.latitude,
+        newVal.longitude,
+        newVal.locationType,
+        newVal.order,
+        newVal.title,
+        newVal.content
+      );
+      this.addLocation(this.locationobject);
+    }
   },
 
   data() {
     return {
+      locationobject: Location,
       basemapGallery: BasemapGallery,
       showgallery: false,
       graphicsLayer: GraphicsLayer,
       locationlist: [],
       showtable: false,
-      fields: ["latitude", "longitude", "order", "title", "content"],
-      items: [
-        {
-          isActive: true,
-          age: 40,
-          first_name: "Dickerson",
-          last_name: "Macdonald",
-        },
-        { isActive: false, age: 21, first_name: "Larsen", last_name: "Shaw" },
-        { isActive: false, age: 89, first_name: "Geneva", last_name: "Wilson" },
-        { isActive: true, age: 38, first_name: "Jami", last_name: "Carney" },
-      ],
+      sortBy: "order",
+      sortDesc: false,
+      fields: ["latitude", "longitude", "order", "title", "content"]
     };
   },
   methods: {
@@ -69,11 +74,12 @@ export default {
     },
     addLocation: function(location) {
       this.locationlist.push(location);
+      console.log(this.locationlist);
       loadModules(["esri/Graphic"], { css: true }).then(([Graphic]) => {
         var point = {
           type: "point",
           longitude: location.longitude,
-          latitude: location.latitude,
+          latitude: location.latitude
         };
         var markerImage = "./bus_stop.gif";
         if (location.locationType == LocationType.SCHOOL) {
@@ -82,8 +88,8 @@ export default {
         var simpleMarkerSymbol = {
           type: "picture-marker",
           url: markerImage,
-          width: "25px",
-          height: "25px",
+          width: "20px",
+          height: "20px"
         };
         var textSymbol = {
           type: "text", // autocasts as new TextSymbol()
@@ -94,36 +100,36 @@ export default {
           yoffset: 4,
           font: {
             // autocasts as new Font()
-            size: 12,
+            size: 10,
             family: "Josefin Slab",
-            weight: "bold",
-          },
+            weight: "bold"
+          }
         };
         var attributes = {
           Name: location.title,
-          Location: location.content,
+          Location: location.content
         };
         // Create popup template
         var popupTemplate = {
           title: "{Name}",
-          content: "I am located at <b>{Location}</b>.",
+          content: "I am located at <b>{Location}</b>."
         };
         var pointGraphic = new Graphic({
           geometry: point,
           attributes: attributes,
           popupTemplate: popupTemplate,
-          symbol: simpleMarkerSymbol,
+          symbol: simpleMarkerSymbol
         });
         this.graphicsLayer.add(pointGraphic);
 
         var pointGraphic1 = new Graphic({
           geometry: point,
-          symbol: textSymbol,
+          symbol: textSymbol
         });
         this.graphicsLayer.add(pointGraphic1);
         console.log(this.locationlist);
       });
-    },
+    }
   },
   mounted() {
     loadModules(
@@ -131,19 +137,19 @@ export default {
         "esri/Map",
         "esri/views/MapView",
         "esri/widgets/BasemapGallery",
-        "esri/layers/GraphicsLayer",
+        "esri/layers/GraphicsLayer"
       ],
       { css: true }
     ).then(([ArcGISMap, MapView, BasemapGallery, GraphicsLayer]) => {
       const map = new ArcGISMap({
-        basemap: "streets-navigation-vector",
+        basemap: "streets-navigation-vector"
       });
 
       this.view = new MapView({
         container: this.$refs.myMap,
         map: map,
         center: [-122.099327, 47.662239],
-        zoom: 13,
+        zoom: 13
       });
       this.graphicsLayer = new GraphicsLayer();
       map.add(this.graphicsLayer);
@@ -173,9 +179,9 @@ export default {
         source: {
           portal: {
             url: "http://www.arcgis.com",
-            useVectorBasemaps: true,
-          },
-        },
+            useVectorBasemaps: true
+          }
+        }
       });
     });
   },
@@ -184,7 +190,7 @@ export default {
       // destroy the map view
       this.view.container = null;
     }
-  },
+  }
 };
 </script>
 
