@@ -3,76 +3,48 @@
     <div>
       <v-header></v-header>
     </div>
+   
     <div class="page-info">
       <div class="display-titles">
         <li v-for="item in items" :key="item.title">
-          <b-button variant="titles" @click="displayContent(item.id)">{{
+          <b-button variant="titles" @click="displayContent(item.id)">
+            {{
             item.title
-          }}</b-button>
+            }}
+          </b-button>
         </li>
       </div>
-      <div class="newpagebutton">
+      <!--  <div class="newpagebutton">
         <b-button variant="primary" @click="createNotes()">New page</b-button>
-      </div>
+      </div>-->
       <div class="mapbutton">
-        <b-button variant="primary" @click="redirectToMaps()"
-          >View map</b-button
-        >
+        <b-button variant="primary" @click="redirectToMaps()">View map</b-button>
       </div>
       <div class="addroutes">
-        <b-button variant="primary" @click="addcoordinates()"
-          >Add Routes</b-button
-        >
+        <b-button variant="primary" @click="addcoordinates()">Add Routes</b-button>
       </div>
       <div class="addcoordinates" v-if="isNewcoordinate == true">
         <div class="latitude">
-          <b-form-input
-            id="input-2"
-            v-model="location.latitude"
-            required
-            placeholder="Latitude"
-          ></b-form-input>
+          <b-form-input id="input-2" v-model="location.latitude" required placeholder="Latitude"></b-form-input>
         </div>
         <div class="longitude">
-          <b-form-input
-            id="input-2"
-            v-model="location.longitude"
-            required
-            placeholder="Longitude"
-          ></b-form-input>
+          <b-form-input id="input-2" v-model="location.longitude" required placeholder="Longitude"></b-form-input>
         </div>
         <div class="radio-type">
           <input type="radio" v-model="locationtype" value="busstop" />Bus Stop
           <input type="radio" v-model="locationtype" value="school" />School
         </div>
         <div class="orderNo">
-          <b-form-input
-            id="input-2"
-            v-model="location.order"
-            required
-            placeholder="Order Number"
-          ></b-form-input>
+          <b-form-input id="input-2" v-model="location.order" required placeholder="Order Number"></b-form-input>
         </div>
         <div class="title">
-          <b-form-input
-            id="input-2"
-            v-model="location.title"
-            required
-            placeholder="Title"
-          ></b-form-input>
+          <b-form-input id="input-2" v-model="location.title" required placeholder="Title"></b-form-input>
         </div>
         <div class="content">
-          <b-form-input
-            id="input-2"
-            v-model="location.content"
-            required
-            placeholder="Content"
-          ></b-form-input>
+          <b-form-input id="input-2" v-model="location.content" required placeholder="Content"></b-form-input>
         </div>
         <div class="insertroutes">
-          <b-button variant="primary" @click="insertcoordinates()"
-            >Add</b-button
-          >
+          <b-button variant="primary" @click="insertcoordinates()">Add</b-button>
         </div>
       </div>
     </div>
@@ -97,6 +69,7 @@ import Note from "../models/Note.js";
 import EsriMap from "./EsriMap.vue";
 import Location from "../models/Location.js";
 import LocationType from "../models/LocationType";
+//import Popup from "./Popup.vue";
 export default {
   data() {
     return {
@@ -107,7 +80,7 @@ export default {
       isNewNote: Boolean,
       showmap: Boolean,
       isNewcoordinate: false,
-      locationtype: LocationType,
+      locationtype: LocationType
       //mapdata: {},
     };
   },
@@ -115,6 +88,7 @@ export default {
     "v-header": Header,
     "v-newpage": Newpage,
     "v-map": EsriMap,
+    //"v-popup": Popup
   },
   methods: {
     // TODO: Create methods that will be sent into Button component
@@ -131,7 +105,7 @@ export default {
     },
 
     reloadItems: function() {
-      this.$dataService.getnotelist().then((result) => {
+      this.$dataService.getnotelist().then(result => {
         // successMessage is whatever we passed in the resolve(...) function above.
         // It doesn't have to be a string, but if it is only a succeed message, it probably will be.
         this.items = result;
@@ -155,19 +129,19 @@ export default {
       console.log(this.location);
     },
     displayContent: function(id) {
-      this.$dataService.displayNoteContent(id).then((result) => {
+      this.$dataService.displayNoteContent(id).then(result => {
         var note = new Note(result.id, result.title, result.content);
         this.note = note;
         this.showpage = true;
         this.isNewNote = false;
         console.log(this.isNewNote);
       });
-    },
+    }
   },
 
   beforeMount() {
     this.reloadItems();
-  },
+  }
 };
 </script>
 <style scoped>
@@ -205,7 +179,7 @@ export default {
 .title {
   margin-top: 37px;
 }
-.content{
+.content {
   margin-top: 38px;
 }
 .insertroutes {

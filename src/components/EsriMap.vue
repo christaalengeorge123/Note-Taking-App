@@ -17,6 +17,14 @@
         :sort-desc.sync="sortDesc"
       ></b-table>
     </div>
+
+    <div v-if="popup == true">
+      <v-popup
+        v-bind:locationOnMap="locationOnMap"
+        v-on:show-location="addLocation"
+        v-on:cancel-location="popup = false"
+      ></v-popup>
+    </div>
   </div>
 </template>
 
@@ -26,14 +34,18 @@ import BasemapGallery from "esri-loader";
 import GraphicsLayer from "esri-loader";
 import Location from "../models/Location.js";
 import LocationType from "../models/LocationType.js";
+import Popup from "./Popup.vue";
 //import Grid from "gridjs-vue";
 
 export default {
+  components: {
+    "v-popup": Popup
+  },
   props: { location: Location },
   watch: {
-    location: function(newVal) {
+    location: function(newVal, oldVal) {
       // watch it
-      //console.log("Prop changed: ", newVal, " | was: ", oldVal);
+      console.log("Prop changed: ", newVal, " | was: ", oldVal);
       this.locationobject = new Location(
         newVal.latitude,
         newVal.longitude,
@@ -49,6 +61,7 @@ export default {
   data() {
     return {
       locationobject: Location,
+      locationOnMap: Location,
       basemapGallery: BasemapGallery,
       showgallery: false,
       graphicsLayer: GraphicsLayer,
@@ -56,7 +69,8 @@ export default {
       showtable: false,
       sortBy: "order",
       sortDesc: false,
-      fields: ["latitude", "longitude", "order", "title", "content"]
+      fields: ["latitude", "longitude", "order", "title", "content"],
+      popup: false
     };
   },
   methods: {
@@ -72,7 +86,22 @@ export default {
     loaddetails: function() {
       this.showtable = !this.showtable;
     },
+
     addLocation: function(location) {
+      this.popup = false;
+      for (var i = 0; i < this.locationlist.length; i++) {
+        if (
+          this.locationlist[i].latitude == location.latitude &&
+          this.locationlist[i].longitude == location.longitude
+        ) {
+          window.alert("Point already exists!!");
+          return;
+        }
+        if (this.locationlist[i].order == location.order) {
+          window.alert("Order number already exists!!");
+          return;
+        }
+      }
       this.locationlist.push(location);
       console.log(this.locationlist);
       loadModules(["esri/Graphic"], { css: true }).then(([Graphic]) => {
@@ -114,6 +143,7 @@ export default {
           title: "{Name}",
           content: "I am located at <b>{Location}</b>."
         };
+
         var pointGraphic = new Graphic({
           geometry: point,
           attributes: attributes,
@@ -173,6 +203,24 @@ export default {
       );
       this.addLocation(location1);
       this.addLocation(location2);
+      var vm = this;
+      this.view.on("click", function(event) {
+        // Get the coordinates of the click on the view
+        // vm.view.popup.autoOpenEnabled = false;
+
+        var lat = event.mapPoint.latitude;
+        var lon = event.mapPoint.longitude;
+        console.log(lat);
+        console.log(lon);
+        // Define a new component called button-counter
+
+        vm.locationOnMap = new Location(lat, lon, "", "", "", "");
+        vm.popup = !vm.popup;
+        console.log(vm.popup);
+
+        //vm.addLocation(location3);
+        console.log(vm.locationOnMap);
+      });
 
       this.basemapGallery = new BasemapGallery({
         view: this.view,
