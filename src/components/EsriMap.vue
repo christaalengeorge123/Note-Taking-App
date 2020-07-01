@@ -204,22 +204,27 @@ export default {
       this.addLocation(location1);
       this.addLocation(location2);
       var vm = this;
+
       this.view.on("click", function(event) {
         // Get the coordinates of the click on the view
         // vm.view.popup.autoOpenEnabled = false;
 
-        var lat = event.mapPoint.latitude;
-        var lon = event.mapPoint.longitude;
-        console.log(lat);
-        console.log(lon);
-        // Define a new component called button-counter
+        vm.view.hitTest(event).then(result => {
+          if (result.results.length < 2) {
+            var lat = event.mapPoint.latitude;
+            var lon = event.mapPoint.longitude;
+            console.log(lat);
+            console.log(lon);
+            // Define a new component called button-counter
 
-        vm.locationOnMap = new Location(lat, lon, "", "", "", "");
-        vm.popup = !vm.popup;
-        console.log(vm.popup);
+            vm.locationOnMap = new Location(lat, lon, "", "", "", "");
+            vm.popup = !vm.popup;
+            console.log(vm.popup);
 
-        //vm.addLocation(location3);
-        console.log(vm.locationOnMap);
+            //vm.addLocation(location3);
+            console.log(vm.locationOnMap);
+          }
+        });
       });
 
       this.basemapGallery = new BasemapGallery({

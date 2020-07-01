@@ -16,7 +16,7 @@
     <div class="insertroutes">
       <b-button variant="primary" @click="insertcoordinates()">Add</b-button>
     </div>
-     <div class="cancelroutes">
+    <div class="cancelroutes">
       <b-button variant="primary" @click="cancelroutes()">Cancel</b-button>
     </div>
   </div>
@@ -38,21 +38,21 @@ export default {
     insertcoordinates: function() {
       this.location = new Location(
         this.locationOnMap.latitude,
-       this.locationOnMap.longitude,
+        this.locationOnMap.longitude,
         this.locationtype,
         this.location.order,
         this.location.title,
         this.location.content
       );
-      console.log("New location is" +this.location.latitude);
+      console.log("New location is" + this.location.latitude);
       this.$emit("show-location", this.location);
     },
-    cancelroutes : function(){
+    cancelroutes: function() {
       this.$emit("cancel-location");
     }
   },
-  mounted(){
-console.log("haii" +this.locationOnMap);
+  mounted() {
+    console.log("haii" + this.locationOnMap);
   }
 };
 console.log("qqqqqqqqq11");
@@ -94,5 +94,9 @@ console.log("qqqqqqqqq11");
   margin-top: 8px;
   margin-left: 5px;
   margin-right: 5px;
+  display: inline-block;
+}
+.cancelroutes{
+  display: inline-block;
 }
 </style>
