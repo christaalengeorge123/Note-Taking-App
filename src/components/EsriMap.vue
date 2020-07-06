@@ -136,12 +136,25 @@ export default {
         };
         var attributes = {
           Name: location.title,
-          Location: location.content
+          Location: location.content,
+          Ivd: "dd"
+        };
+        //for editing
+        var editThisAction = {
+          title: "Edit",
+          id: "edit-this",
+          className: "esri-icon-edit"
+        };
+        var deleteThisAction = {
+          title: "Delete",
+          id: "delete-this",
+          className: "esri-icon-trash"
         };
         // Create popup template
         var popupTemplate = {
           title: "{Name}",
-          content: "I am located at <b>{Location}</b>."
+          content: "I am located at <b>{Location}</b>.",
+          actions: [editThisAction, deleteThisAction]
         };
 
         var pointGraphic = new Graphic({
@@ -152,8 +165,12 @@ export default {
         });
         this.graphicsLayer.add(pointGraphic);
 
+        var orderAttributes = {
+          Ivd: "dd1"
+        };
         var pointGraphic1 = new Graphic({
           geometry: point,
+          attributes: orderAttributes,
           symbol: textSymbol
         });
         this.graphicsLayer.add(pointGraphic1);
@@ -227,6 +244,17 @@ export default {
         });
       });
 
+      // Event handler that fires each time an action is clicked
+      vm.view.popup.on("trigger-action", function(event) {
+        if (event.action.id === "edit-this") {
+          console.log(vm.view.popup.selectedFeature);
+        }
+      });
+       vm.view.popup.on("trigger-action", function(event) {
+        if (event.action.id === "delete-this") {
+          console.log(vm.view.popup.selectedFeature);
+        }
+      });
       this.basemapGallery = new BasemapGallery({
         view: this.view,
         source: {
