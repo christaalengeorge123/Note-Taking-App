@@ -60,6 +60,7 @@ export default {
 
   data() {
     return {
+      editLocation: Location,
       locationobject: Location,
       locationOnMap: Location,
       basemapGallery: BasemapGallery,
@@ -137,7 +138,9 @@ export default {
         var attributes = {
           Name: location.title,
           Location: location.content,
-          Ivd: "dd"
+          LocationId: location.uid,
+          Order: location.order,
+          Type: location.locationType
         };
         //for editing
         var editThisAction = {
@@ -166,7 +169,11 @@ export default {
         this.graphicsLayer.add(pointGraphic);
 
         var orderAttributes = {
-          Ivd: "dd1"
+          Name: location.title,
+          Location: location.content,
+          LocationId: location.uid,
+          Order: location.order,
+          Type: location.locationType
         };
         var pointGraphic1 = new Graphic({
           geometry: point,
@@ -175,6 +182,7 @@ export default {
         });
         this.graphicsLayer.add(pointGraphic1);
         console.log(this.locationlist);
+        console.log(location.uid);
       });
     }
   },
@@ -248,13 +256,42 @@ export default {
       vm.view.popup.on("trigger-action", function(event) {
         if (event.action.id === "edit-this") {
           console.log(vm.view.popup.selectedFeature);
+          vm.popup = !vm.popup;
+          var locationId = vm.view.popup.selectedFeature.attributes.LocationId;
+          // console.log("location id is" + locationId);
+          var itemArray1 = vm.view.popup.selectedFeature.layer.graphics.items;
+          var editarray = [];
+          for (let i = 0; i < itemArray1.length; i++) {
+            // console.log(vm.graphicsLayer);
+            if (locationId == itemArray1[i].attributes.LocationId) {
+              this.locationobject = new location("","",)
+              editarray.push(itemArray1[i]);
+            }
+          }
+
+          console.log(editarray);
         }
-      });
-       vm.view.popup.on("trigger-action", function(event) {
+
         if (event.action.id === "delete-this") {
           console.log(vm.view.popup.selectedFeature);
+          var locationIddelete =
+            vm.view.popup.selectedFeature.attributes.LocationId;
+          // console.log("location id is" + locationId);
+          var itemArray = vm.view.popup.selectedFeature.layer.graphics.items;
+          var removearray = [];
+          for (let i = 0; i < itemArray.length; i++) {
+            // console.log(vm.graphicsLayer);
+            if (locationIddelete == itemArray[i].attributes.LocationId) {
+              removearray.push(itemArray[i]);
+            }
+          }
+          console.log(removearray);
+          vm.graphicsLayer.removeMany(removearray);
+
+          vm.view.popup.visible = false;
         }
       });
+
       this.basemapGallery = new BasemapGallery({
         view: this.view,
         source: {
