@@ -5,7 +5,7 @@
       <input type="radio" v-model="locationtype" value="school" />School
     </div>
     <div class="order">
-      <input type="text" id="order" v-model="location.order" required placeholder="order" />
+      <input type="text" id="order"  v-model="location.order" required placeholder="order" />
     </div>
     <div class="title">
       <input type="text" id="title" v-model="location.title" required placeholder="Title" />
@@ -14,7 +14,10 @@
       <input type="text" id="content" v-model="location.content" required placeholder="Content" />
     </div>
     <div class="insertroutes">
-      <b-button variant="primary" @click="insertcoordinates()">Add</b-button>
+      <b-button variant="primary" v-if="showedit == false" @click="insertcoordinates()">Add</b-button>
+    </div>
+      <div class="insertroutes">
+      <b-button variant="primary" v-if="showedit == true" @click="editcoordinates()">Edit</b-button>
     </div>
     <div class="cancelroutes">
       <b-button variant="primary" @click="cancelroutes()">Cancel</b-button>
@@ -27,7 +30,7 @@ import Location from "../models/Location.js";
 import LocationType from "../models/LocationType";
 export default {
   name: "Popup",
-  props: { locationOnMap: Location },
+  props: { locationOnMap: Location, editLocation:Location, showedit:Boolean},
   data() {
     return {
       location: Location,
@@ -52,7 +55,10 @@ export default {
     }
   },
   mounted() {
-    console.log("haii" + this.locationOnMap);
+    console.log("editlocation ha hu =" + this.editLocation);
+    console.log(this.editLocation.order);
+    this.location = this.editLocation;
+    console.log(this.location);
   }
 };
 console.log("qqqqqqqqq11");

@@ -21,6 +21,8 @@
     <div v-if="popup == true">
       <v-popup
         v-bind:locationOnMap="locationOnMap"
+        v-bind:editLocation="editLocation"
+        v-bind:showedit="showedit"
         v-on:show-location="addLocation"
         v-on:cancel-location="popup = false"
       ></v-popup>
@@ -65,6 +67,7 @@ export default {
       locationOnMap: Location,
       basemapGallery: BasemapGallery,
       showgallery: false,
+      showedit: false,
       graphicsLayer: GraphicsLayer,
       locationlist: [],
       showtable: false,
@@ -244,6 +247,7 @@ export default {
 
             vm.locationOnMap = new Location(lat, lon, "", "", "", "");
             vm.popup = !vm.popup;
+            vm.showedit = false;
             console.log(vm.popup);
 
             //vm.addLocation(location3);
@@ -255,25 +259,36 @@ export default {
       // Event handler that fires each time an action is clicked
       vm.view.popup.on("trigger-action", function(event) {
         if (event.action.id === "edit-this") {
-          console.log(vm.view.popup.selectedFeature);
+          // console.log(vm.view.popup.selectedFeature);
           vm.popup = !vm.popup;
+          vm.showedit = true;
           var locationId = vm.view.popup.selectedFeature.attributes.LocationId;
           // console.log("location id is" + locationId);
           var itemArray1 = vm.view.popup.selectedFeature.layer.graphics.items;
-          var editarray = [];
+
           for (let i = 0; i < itemArray1.length; i++) {
             // console.log(vm.graphicsLayer);
             if (locationId == itemArray1[i].attributes.LocationId) {
-              this.locationobject = new location("","",)
-              editarray.push(itemArray1[i]);
+             console.log("typeeee"+itemArray1[i].attributes.Type)
+             console.log("nameee"+itemArray1[i].attributes.Name)
+              vm.editLocation = new Location(
+                "",
+                "",
+                itemArray1[i].attributes.Type,
+                itemArray1[i].attributes.Order,
+                itemArray1[i].attributes.Name,
+                itemArray1[i].attributes.Location,
+                itemArray1[i].attributes.LocationId
+              );
+              break;
             }
           }
-
-          console.log(editarray);
+         
+          console.log("edit object is" + vm.editLocation);
         }
 
         if (event.action.id === "delete-this") {
-          console.log(vm.view.popup.selectedFeature);
+          //console.log(vm.view.popup.selectedFeature);
           var locationIddelete =
             vm.view.popup.selectedFeature.attributes.LocationId;
           // console.log("location id is" + locationId);
