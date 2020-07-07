@@ -1,22 +1,28 @@
 <template>
   <div class="modal">
     <div class="radio-type">
-      <input type="radio" v-model="locationtype" value="busstop" />Bus Stop
-      <input type="radio" v-model="locationtype" value="school" />School
+      <input type="radio" v-model="locationOnMap.locationType" value="busstop" />Bus Stop
+      <input type="radio" v-model="locationOnMap.locationType" value="school" />School
     </div>
     <div class="order">
-      <input type="text" id="order"  v-model="location.order" required placeholder="order" />
+      <input type="text" id="order" v-model="locationOnMap.order" required placeholder="order" />
     </div>
     <div class="title">
-      <input type="text" id="title" v-model="location.title" required placeholder="Title" />
+      <input type="text" id="title" v-model="locationOnMap.title" required placeholder="Title" />
     </div>
     <div class="content">
-      <input type="text" id="content" v-model="location.content" required placeholder="Content" />
+      <input
+        type="text"
+        id="content"
+        v-model="locationOnMap.content"
+        required
+        placeholder="Content"
+      />
     </div>
     <div class="insertroutes">
       <b-button variant="primary" v-if="showedit == false" @click="insertcoordinates()">Add</b-button>
     </div>
-      <div class="insertroutes">
+    <div class="insertroutes">
       <b-button variant="primary" v-if="showedit == true" @click="editcoordinates()">Edit</b-button>
     </div>
     <div class="cancelroutes">
@@ -30,38 +36,25 @@ import Location from "../models/Location.js";
 import LocationType from "../models/LocationType";
 export default {
   name: "Popup",
-  props: { locationOnMap: Location, editLocation:Location, showedit:Boolean},
+  props: { locationOnMap: Location, showedit: Boolean },
   data() {
     return {
-      location: Location,
       locationtype: LocationType
     };
   },
   methods: {
     insertcoordinates: function() {
-      this.location = new Location(
-        this.locationOnMap.latitude,
-        this.locationOnMap.longitude,
-        this.locationtype,
-        this.location.order,
-        this.location.title,
-        this.location.content
-      );
-      console.log("New location is" + this.location.latitude);
-      this.$emit("show-location", this.location);
+      console.log("New location is" + this.locationOnMap.latitude);
+      this.$emit("show-location", this.locationOnMap);
     },
     cancelroutes: function() {
       this.$emit("cancel-location");
+    },
+    editcoordinates: function() {
+      this.$emit("edit-location", this.locationOnMap);
     }
-  },
-  mounted() {
-    console.log("editlocation ha hu =" + this.editLocation);
-    console.log(this.editLocation.order);
-    this.location = this.editLocation;
-    console.log(this.location);
   }
 };
-console.log("qqqqqqqqq11");
 </script>
     
     
@@ -102,7 +95,7 @@ console.log("qqqqqqqqq11");
   margin-right: 5px;
   display: inline-block;
 }
-.cancelroutes{
+.cancelroutes {
   display: inline-block;
 }
 </style>
